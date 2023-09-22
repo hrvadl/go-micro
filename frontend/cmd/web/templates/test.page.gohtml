@@ -1,0 +1,52 @@
+{{template "base" .}}
+
+{{define "content" }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-5">Test microservices</h1>
+                <hr>
+
+                <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
+                    <span class="text-muted">Output shows here...</span>
+                </div>
+                <button class="send-broker-btn btn btn-dark mt-4">Send to broker</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4 class="mt-5">Sent</h4>
+                <div class="mt-1" style="outline: 1px solid silver; padding: 2em;">
+                    <pre id="payload"><span class="text-muted">Nothing sent yet...</span></pre>
+                </div>
+            </div>
+            <div class="col">
+                <h4 class="mt-5">Received</h4>
+                <div class="mt-1" style="outline: 1px solid silver; padding: 2em;">
+                    <pre id="received"><span class="text-muted">Nothing received yet...</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "js"}}
+    <script>
+        const sendBrokerBtn = document.querySelector('.send-broker-btn');
+        const output = document.querySelector('#output');
+        const payload = document.querySelector('#payload');
+        const received = document.querySelector('#received');
+
+        sendBrokerBtn.addEventListener('click', async () => {
+           try {
+            output.innerHTML = '<br>Sending the request...'
+            const res = await fetch('http://localhost:8080', { method: 'POST' }) 
+            const data = await res.json()
+            payload.innerHTML = '<br>Sending the request...'
+            received.innerHTML = JSON.stringify(data, 0, 4)
+           } catch (error) {
+            received.innerHTML = '<br>Error: ' + error
+           }
+        })
+    </script>
+{{end}}
