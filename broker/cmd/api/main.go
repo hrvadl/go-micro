@@ -6,21 +6,14 @@ import (
 	"broker/pkg/server"
 	"fmt"
 	"log"
-	"net/http"
 )
 
 const webPort = "80"
 
 func main() {
 	h := handlers.NewBrokerHandlers(jsonh.NewJSONRWR())
-	app := server.NewBroker(h)
+	app := server.NewBroker(h, fmt.Sprintf(":%v", webPort))
 
 	log.Printf("starting broker service on port %v \n", webPort)
-
-	srv := &http.Server{
-		Handler: app.InitRoutes(),
-		Addr:    fmt.Sprintf(":%s", webPort),
-	}
-
-	log.Panic(srv.ListenAndServe())
+	log.Panic(app.ListenAndServe())
 }

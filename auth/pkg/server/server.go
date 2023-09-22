@@ -1,25 +1,19 @@
 package server
 
 import (
-	"broker/pkg/handlers"
+	"auth/pkg/handlers"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 )
 
-type BrokerServer struct {
-	h handlers.BrokerHandlers
+type AuthServer struct {
+	http.Server
 }
 
-func NewBroker(h handlers.BrokerHandlers) *BrokerServer {
-	return &BrokerServer{
-		h: h,
-	}
-}
-
-func (app *BrokerServer) InitRoutes() http.Handler {
+func NewAuth(h handlers.AuthHandlers, addr string) *AuthServer {
 	mux := chi.NewRouter()
 
 	mux.Use(cors.Handler(cors.Options{
@@ -33,7 +27,10 @@ func (app *BrokerServer) InitRoutes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Post("/", app.h.HandleGetBroker)
-
-	return mux
+	return &AuthServer{
+		Server: http.Server{
+			Handler: mux,
+			Addr:    addr,
+		},
+	}
 }

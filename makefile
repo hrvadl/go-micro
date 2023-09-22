@@ -10,7 +10,7 @@ down:
 
 build:
 	@echo "Rebuilding & starting docker compose..."
-	docker compse up --build -d
+	docker compose up --build -d
 
 clean:
 	@echo "Cleaning containers..."
