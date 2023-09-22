@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -28,7 +27,7 @@ func main() {
 func render(w http.ResponseWriter, t string) {
 	templateSlice := append(
 		make([]string, 0, len(partials)+1),
-		append([]string{fmt.Sprintf("./cmd/web/templates/%s", t)}, partials...)...,
+		append([]string{"./cmd/web/templates/" + t}, partials...)...,
 	)
 
 	tmpl, err := template.ParseFiles(templateSlice...)
