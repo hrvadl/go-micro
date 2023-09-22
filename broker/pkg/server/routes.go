@@ -1,6 +1,7 @@
-package main
+package server
 
 import (
+	"broker/pkg/handlers"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -8,7 +9,17 @@ import (
 	"github.com/go-chi/cors"
 )
 
-func (app *Broker) routes() http.Handler {
+type BrokerServer struct {
+	h handlers.BrokerHandlers
+}
+
+func NewBroker(h handlers.BrokerHandlers) *BrokerServer {
+	return &BrokerServer{
+		h: h,
+	}
+}
+
+func (app *BrokerServer) InitRoutes() http.Handler {
 	mux := chi.NewRouter()
 
 	mux.Use(cors.Handler(cors.Options{
@@ -22,7 +33,7 @@ func (app *Broker) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Post("/", app.HandleGetBroker)
+	mux.Post("/", app.h.HandleGetBroker)
 
 	return mux
 }

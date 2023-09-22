@@ -1,6 +1,9 @@
 package main
 
 import (
+	"broker/pkg/handlers"
+	"broker/pkg/jsonh"
+	"broker/pkg/server"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,15 +11,14 @@ import (
 
 const webPort = "80"
 
-type Broker struct{}
-
 func main() {
-	app := &Broker{}
+	h := handlers.NewBrokerHandlers(jsonh.NewJSONRWR())
+	app := server.NewBroker(h)
 
 	log.Printf("starting broker service on port %v \n", webPort)
 
 	srv := &http.Server{
-		Handler: app.routes(),
+		Handler: app.InitRoutes(),
 		Addr:    fmt.Sprintf(":%s", webPort),
 	}
 
