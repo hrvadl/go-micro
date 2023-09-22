@@ -10,6 +10,7 @@
                 <div id="output" class="mt-5" style="outline: 1px solid silver; padding: 2em;">
                     <span class="text-muted">Output shows here...</span>
                 </div>
+                <button class="send-broker-btn">Send to broker</button>
             </div>
         </div>
         <div class="row">
@@ -31,6 +32,21 @@
 
 {{define "js"}}
     <script>
-        
+        const sendBrokerBtn = document.querySelector('.send-broker-btn');
+        const output = document.querySelector('#output');
+        const payload = document.querySelector('#payload');
+        const received = document.querySelector('#received');
+
+        sendBrokerBtn.addEventListener('click', async () => {
+           try {
+            output.innerHTML = '<br>Sending the request...'
+            const res = await fetch('http://localhost:8080', { method: 'POST' }) 
+            const data = await res.json()
+            payload.innerHTML = '<br>Sending the request...'
+            received.innerHTML = JSON.stringify(data, 0, 4)
+           } catch (error) {
+            received.innerHTML = '<br>Error: ' + error
+           }
+        })
     </script>
 {{end}}

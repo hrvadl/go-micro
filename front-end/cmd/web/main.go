@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,14 +13,16 @@ var partials = []string{
 	"./cmd/web/templates/footer.partial.gohtml",
 }
 
+const port = 3000
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		render(w, "test.page.gohtml")
 	})
 
-	log.Println("Starting front end service on port 8080")
+	log.Printf("Starting front end service on port %v", port)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
 		log.Panic(err)
 	}
 }
